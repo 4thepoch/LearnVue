@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Shopping List App</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div id="shopping-list">
+            <div class="header">
+                <h1 style="float: left">{{header.toLocaleUpperCase()}}</h1>
+                <div>
+                    <button class="btn btn-clear" @click="clear" style="float: right">Clear</button>
+                    <button v-if="state === 'default'" class="btn btn-primary" @click="changeState('edit')" style="float: right">Add Item</button>
+                    <button v-else class="btn btn-cancel" @click="changeState('default')" style="float: right">Cancel</button>
+                </div>
+            </div>
+            <div v-if="state === 'edit'" class="add-item-form">
+                <input v-model="newItem" type="text" placeholder="Add an item" @keyup.enter="saveItem">
+                <button class="btn btn-primary" @click="saveItem" v-bind:disabled="newItem.length===0">Save Item</button>
+            </div>
+<!--            <h1>{{header==null ? "Welcome":header}}</h1>-->
+            <a v-bind:href="newItem" target="_blank">Dynamic Link</a>
+            <ul>
+                <li v-for="item in items" :class="[item.purchased ? 'strikeout' : '', item.highPriority ? 'priority':'']" @click="togglePurchased(item)">{{item.label}}</li>
+            </ul>
+<!--            <input type="text" v-model="header">-->
+            <div>
+                <p v-if="items.length === 0">Nice job! You've bought all your items.</p>
+            </div>
+        </div>
+<!--        <div id="test" style="display: block">-->
+<!--            <h1>{{bottom_subject}}</h1>-->
+<!--            <ul>-->
+<!--                <li v-for="itm in itms">{{itm}}</li>-->
+<!--            </ul>-->
+<!--        </div>-->
+        <script src="https://unpkg.com/vue"></script>
+        <script>
+            var shoppingList = new Vue({
+                el: '#shopping-list',
+                data: {
+                    state: 'default',
+                    header: 'shopping list app',
+                    // header: null,
+                    newItem: '',
+                    items: [
+                        {
+                            label: '10 party hats',
+                            purchased: false,
+                            highPriority: false,
+                        },
+                        {
+                            label: '2 board games',
+                            purchased: true,
+                            highPriority: false,
+                        },
+                        {
+                            label: '20 cups',
+                            purchased: false,
+                            highPriority: true,
+                        }
+                    ]
+                },
+                methods: {
+                    saveItem: function() {
+                        this.items.push({
+                            label:this.newItem,
+                            purchased:false,
+                        });
+                        this.newItem = '';
+                    },
+                    changeState: function(newState) {
+                        this.state = newState;
+                        this.newItem = '';
+                    },
+                    clear: function() {
+                        this.items = [];
+                        this.newItem = '';
+                    },
+                    togglePurchased: function (item) {
+                        item.purchased = ! item.purchased;
+                    }
+                }
+            });
+            // var test = new Vue({
+            //     el: '#test',
+            //     data: {
+            //         bottom_subject: 'Have a Good Shopping!!',
+            //         // header: null,
+            //         newItem: '',
+            //         itms: [
+            //             '10 party hats',
+            //             '2 board games',
+            //             '20 cups',
+            //         ]
+            //     }
+            // })
+        </script>
+    </body>
+</html>
